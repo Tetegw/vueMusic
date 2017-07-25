@@ -1,12 +1,20 @@
 <template>
     <div id="app">
-      hello world
+      <v-header></v-header>
+      <v-tab></v-tab>
+      <router-view></router-view>
     </div>
 </template>
 
 <script>
-export default {
+import Vheader from '@/components/v-header/header'
+import Vtab from '@/components/v-tab/tab'
 
+export default {
+	components:{
+		'v-header': Vheader,
+    'v-tab': Vtab,
+	}
 }
 </script>
 
