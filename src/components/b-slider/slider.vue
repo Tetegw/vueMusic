@@ -5,21 +5,21 @@
             </slot>
         </div>
         <div class="dots">
-            <span class="dot"  v-for="(item, index) in dots" :class="{'active': currentPageIndex === index }"></span>
+            <span class="dot" v-for="(item, index) in dots" :class="{'active': currentPageIndex === index }" :key="index"></span>
         </div>
     </div>
 </template>
 
 <script>
 import BScroll from 'better-scroll'
-export default{
-    data(){
-        return{
+export default {
+    data() {
+        return {
             dots: [],
             currentPageIndex: 0,
         }
     },
-    props:{
+    props: {
         loop: {
             type: Boolean,
             default: true
@@ -45,7 +45,7 @@ export default{
         }, 20)
 
         window.addEventListener('resize', () => {
-            if(!this.slider){
+            if (!this.slider) {
                 return
             }
             this._setSliderWidth(true)
@@ -54,8 +54,8 @@ export default{
 
 
     },
-    methods:{
-        _setSliderWidth(isResize){
+    methods: {
+        _setSliderWidth(isResize) {
             this.children = this.$refs.sliderGroup.children
 
             let width = 0
@@ -69,7 +69,7 @@ export default{
             if (this.loop && !isResize) {
                 width += 2 * sliderWidth
             }
-            this.$refs.sliderGroup.style.width  = width + 'px'
+            this.$refs.sliderGroup.style.width = width + 'px'
         },
         _initSlider() {
             this.slider = new BScroll(this.$refs.slider, {
@@ -89,7 +89,7 @@ export default{
                 }
                 this.currentPageIndex = pageIndex
 
-                if(this.autoPlay){
+                if (this.autoPlay) {
                     clearTimeout(this.timer)
                     this._play()
                 }

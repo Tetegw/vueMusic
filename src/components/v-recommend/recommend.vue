@@ -1,12 +1,12 @@
 <template>
     <div class="v-recommend">
-        <div class="recommend-content">
+        <v-scroll class="recommend-content" :data="discList" ref="scroll">
             <div>
                 <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
                     <v-slider>
                         <div v-for="item in recommends" :key="item.id">
                             <a :href="item.linkUrl">
-                                <img  :src="item.picUrl">
+                                <img :src="item.picUrl" @load="imgIsLoad">
                             </a>
                         </div>
                     </v-slider>
@@ -14,9 +14,9 @@
                 <div class="recommend-list">
                     <h1 class="list-title">热门歌单推荐</h1>
                     <ul>
-                        <li  v-for="item in discList" class="item" :key="item.dissid">
+                        <li v-for="item in discList" class="item" :key="item.dissid">
                             <div class="icon">
-                                <img :src="item.imgurl" alt="">
+                                <img v-lazy="item.imgurl" alt="">
                             </div>
                             <div class="text">
                                 <h2 class="name" v-html="item.creator.name"></h2>
@@ -26,29 +26,31 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </v-scroll>
     </div>
 </template>
 
 <script>
+import Scroll from '@/components/b-scroll/scroll';
 import Slider from '@/components/b-slider/slider'
-import {getRecommend, getDiscList} from '@/api/recommend'
-import {ERR_OK} from '@/api/config' 
+import { getRecommend, getDiscList } from '@/api/recommend'
+import { ERR_OK } from '@/api/config'
 export default {
-    data(){
-        return{
+    data() {
+        return {
             recommends: [],
             discList: [],
         }
     },
-    components:{
+    components: {
+        'v-scroll': Scroll,
         'v-slider': Slider,
     },
-    created(){
+    created() {
         this._getRecommend()
         this._getDiscList()
     },
-    methods:{
+    methods: {
         _getRecommend() {
             getRecommend().then((res) => {
                 if (res.code === ERR_OK) {
@@ -56,14 +58,20 @@ export default {
                 }
             })
         },
-        _getDiscList(){
+        _getDiscList() {
             getDiscList().then((res) => {
-                if(res.code === ERR_OK){
+                if (res.code === ERR_OK) {
                     this.discList = res.data.list
                 }
             })
+        },
+        imgIsLoad() {
+            if (!this.checkLoaded) {
+                this.$refs.scroll.refresh()
+                this.checkLoaded = true
+            }
         }
-    }
+    },
 }
 </script>
 
@@ -120,3 +128,4 @@ export default {
                 top: 50%
                 transform: translateY(-50%)
 </style>
+
