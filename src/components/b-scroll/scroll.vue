@@ -54,9 +54,9 @@ export default {
             })
 
             if (this.listenScroll) {
-                let me = this
+                let _this = this
                 this.scroll.on('scroll', (pos) => {
-                    me.$emit('scroll', pos)
+                    _this.$emit('emitScroll', pos)
                 })
             }
 
