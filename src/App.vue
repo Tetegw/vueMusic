@@ -5,17 +5,20 @@
     <keep-alive>
       <router-view></router-view>
     </keep-alive>
+    <v-player></v-player>
   </div>
 </template>
 
 <script>
 import Vheader from '@/components/v-header/header'
 import Vtab from '@/components/v-tab/tab'
+import Player from '@/components/v-player/player';
 
 export default {
   components: {
     'v-header': Vheader,
     'v-tab': Vtab,
+    'v-player': Player
   }
 }
 </script>

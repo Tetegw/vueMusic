@@ -1,14 +1,16 @@
 <template>
     <div class="v-singer">
-        <v-listView :data="singers"></v-listView>
+        <v-listView :data="singers" @selectItem="selectItem"></v-listView>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
+import ListView from '@/components/b-listView/listView';
 import { getSinger } from '@/api/singer'
 import { ERR_OK } from '@/api/config'
 import Singer from '@/common/js/singer_class'
-import ListView from '@/components/b-listView/listView';
+import { mapMutations } from 'vuex';
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
@@ -23,13 +25,6 @@ export default {
         this._getSinger();
     },
     methods: {
-        _getSinger() {
-            getSinger().then((res) => {
-                if (res.code === ERR_OK) {
-                    this.singers = this.normalizeSinger(res.data.list)
-                }
-            })
-        },
         normalizeSinger(list) {
             let map = {
                 hot: {
@@ -78,6 +73,22 @@ export default {
             })
 
             return hot.concat(ret)
+        },
+        selectItem(item) {
+            this.$router.push({
+                path: `/singer/${item.id}`
+            })
+            this.SET_SINGER(item)
+        },
+        ...mapMutations({
+            SET_SINGER: 'SET_SINGER'
+        }),
+        _getSinger() {
+            getSinger().then((res) => {
+                if (res.code === ERR_OK) {
+                    this.singers = this.normalizeSinger(res.data.list)
+                }
+            })
         }
     },
     components: {

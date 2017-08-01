@@ -7,6 +7,10 @@ import Recommend from '@/components/v-recommend/recommend'
 import Search from '@/components/v-search/search'
 import Singer from '@/components/v-singer/singer'
 
+// 子路由
+import SingerDetail from '@/components/v-singer-detail/singer-detail';
+
+
 Vue.use(Router)
 
 export default new Router({
@@ -25,5 +29,9 @@ export default new Router({
     }, {
         path: '/singer',
         component: Singer,
+        children: [{
+            path: ':id',
+            component: SingerDetail
+        }]
     }]
 })
