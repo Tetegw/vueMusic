@@ -14,12 +14,12 @@
                 <div class="recommend-list">
                     <h1 class="list-title">热门歌单推荐</h1>
                     <ul>
-                        <li v-for="item in discList" class="item" :key="item.dissid">
+                        <li v-for="item in discList" class="item" :key="item.dissid" @click="selectItem(item)">
                             <div class="icon">
                                 <img v-lazy="item.imgurl" alt="">
                             </div>
                             <div class="text">
-                                <h2 class="name" v-html="item.creator.name"></h2>
+                                <h2 class="name" v-html="item.author"></h2>
                                 <p class="desc" v-html="item.dissname"></p>
                             </div>
                         </li>
@@ -27,6 +27,7 @@
                 </div>
             </div>
         </v-scroll>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -35,6 +36,8 @@ import Scroll from '@/components/b-scroll/scroll';
 import Slider from '@/components/b-slider/slider'
 import { getRecommend, getDiscList } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
+import { mapMutations } from 'vuex';
+
 export default {
     data() {
         return {
@@ -48,9 +51,21 @@ export default {
     },
     created() {
         this._getRecommend()
-        // this._getDiscList()
+        this._getDiscList()
     },
     methods: {
+        imgIsLoad() {
+            if (!this.checkLoaded) {
+                this.$refs.scroll.refresh()
+                this.checkLoaded = true
+            }
+        },
+        selectItem(item) {
+            this.setDisc(item)
+            this.$router.push({
+                path: `recommend/${item.dissid}`
+            })
+        },
         _getRecommend() {
             getRecommend().then((res) => {
                 if (res.code === ERR_OK) {
@@ -61,16 +76,14 @@ export default {
         _getDiscList() {
             getDiscList().then((res) => {
                 if (res.code === ERR_OK) {
-                    this.discList = res.data.list
+                    // this.discList = res.data.list
+                    this.discList = res.data.hotdiss.list
                 }
             })
         },
-        imgIsLoad() {
-            if (!this.checkLoaded) {
-                this.$refs.scroll.refresh()
-                this.checkLoaded = true
-            }
-        }
+        ...mapMutations({
+            setDisc: 'SET_DISC'
+        })
     },
 }
 </script>

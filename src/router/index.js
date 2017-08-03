@@ -9,6 +9,8 @@ import Singer from '@/components/v-singer/singer'
 
 // 子路由
 import SingerDetail from '@/components/v-singer-detail/singer-detail';
+import TopList from '@/components/v-top-list/top-list';
+import Disc from '@/components/v-disc/disc';
 
 
 Vue.use(Router)
@@ -16,13 +18,21 @@ Vue.use(Router)
 export default new Router({
     routes: [{
         path: '/',
-        redirect: '/rank',
+        redirect: '/recommend',
     }, {
         path: '/rank',
         component: Rank,
+        children: [{
+            path: ':id',
+            component: TopList
+        }]
     }, {
         path: '/recommend',
         component: Recommend,
+        children: [{
+            path: ':id',
+            component: Disc
+        }]
     }, {
         path: '/search',
         component: Search,
