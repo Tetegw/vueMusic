@@ -7,7 +7,7 @@
         <!--  top -->
         <div class="bg-image" :Style="bgStyle" ref="bgImage">
             <div class="play-wrapper">
-                <div class="play" v-show="songs.length" ref="playBtn">
+                <div class="play" v-show="songs.length" ref="playBtn" @click="random">
                     <i class="icon-play"></i>
                     <span class="text">随机播放全部</span>
                 </div>
@@ -18,7 +18,7 @@
         <div class="bg-layer" ref="layer"></div>
         <v-scroll class="list" ref="list" :data="songs" :probeType="probeType" :listenScroll="listenScroll" @emitScroll="emitScroll">
             <div class="song-list-wrapper">
-                <v-song-list :songs="songs" v-if="songs.length" @emitSelectItem="emitSelectItem"></v-song-list>
+                <v-song-list :songs="songs" :rank="rank" v-if="songs.length" @emitSelectItem="emitSelectItem"></v-song-list>
             </div>
         </v-scroll>
     </div>
@@ -51,6 +51,10 @@ export default {
         bgImage: {
             type: String,
             default: ''
+        },
+        rank: {
+            type: Boolean,
+            default: false
         }
     },
     computed: {
@@ -71,8 +75,14 @@ export default {
                 index
             })
         },
+        random() {
+            this.randomPlay({
+                list: this.songs
+            })
+        },
         ...mapActions([
-            'selectPlay'
+            'selectPlay',
+            'randomPlay'
         ])
     },
     watch: {
