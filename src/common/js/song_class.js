@@ -1,3 +1,6 @@
+import { getLyric } from '@/api/song'
+import { ERR_OK } from '@/api/config';
+
 export default class song {
     constructor({ id, mid, singer, name, album, duration, image, url }) {
         this.id = id
@@ -8,6 +11,29 @@ export default class song {
         this.duration = duration
         this.image = image
         this.url = url
+    }
+
+    getLyric() {
+        if (this.lyric) {
+            return Promise.resolve(this.lyric)
+        }
+        return new Promise((resolve, reject) => {
+            getLyric(this.id).then((res) => {
+                if (res.code === ERR_OK) {
+                    // 解析为标准换行字符串
+                    let Res = res.lyric.replace(/&#58;/g, ':')
+                    Res = Res.replace(/&#46;/g, '.')
+                    Res = Res.replace(/&#32;/g, ' ')
+                    Res = Res.replace(/&#45;/g, '-')
+                    Res = Res.replace(/&#10;/g, '\n')
+                    this.lyric = Res
+                    resolve(this.lyric)
+                } else {
+                    reject('no lyric')
+                }
+            })
+        })
+
     }
 }
 
