@@ -574,7 +574,7 @@ export default {
                         color: $color-text-l
                         font-size: $font-size-medium
                         &.current
-                            color: $color-text
+                            color: $color-theme
         .bottom
             position: absolute
             bottom: 50px
