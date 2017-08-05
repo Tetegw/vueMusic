@@ -108,7 +108,7 @@ export default {
 <style lang="stylus">
 .v-singer
     position: fixed
-    top: 88px
+    top: 50px
     bottom: 0
     width: 100%
 </style>

@@ -474,7 +474,7 @@ export default {
         top: 0
         bottom: 0
         z-index: 150
-        background: $color-background
+        background: $color-dialog-background
         .background
             position: absolute
             left: 0
@@ -574,7 +574,7 @@ export default {
                         color: $color-text-l
                         font-size: $font-size-medium
                         &.current
-                            color: $color-text
+                            color: $color-theme
         .bottom
             position: absolute
             bottom: 50px
@@ -589,11 +589,11 @@ export default {
                     width: 8px
                     height: 8px
                     border-radius: 50%
-                    background: $color-text-l
+                    background: $color-text-w
                     &.active
                         width: 20px
                         border-radius: 5px
-                        background: $color-text-ll
+                        background: $color-text-wl
             .progress-wrapper
                 display: flex
                 align-items: center

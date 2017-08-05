@@ -181,7 +181,7 @@ export default {
         text-align: center
         line-height: 40px
         font-size: $font-size-large
-        color: $color-text
+        color: $color-text-w
     .bg-image
         position: relative
         width: 100%
@@ -219,7 +219,7 @@ export default {
             left: 0
             width: 100%
             height: 100%
-            background: rgba(7, 17, 27, 0.4)
+            background: rgba(7, 17, 27, 0.6)
     .bg-layer
         position: relative
         height: 100%

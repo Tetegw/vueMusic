@@ -14,7 +14,7 @@
                 <div class="recommend-list">
                     <h1 class="list-title">热门歌单推荐</h1>
                     <ul>
-                        <li v-for="item in discList" class="item" :key="item.dissid" @click="selectItem(item)">
+                        <li v-for="item in discList" class="item border_1px" :key="item.dissid" @click="selectItem(item)">
                             <div class="icon">
                                 <img v-lazy="item.imgurl" alt="">
                             </div>
@@ -98,11 +98,12 @@ export default {
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
+  @import "~common/stylus/common";
 
     .v-recommend
         position: fixed
         width: 100%
-        top: 88px
+        top: 50px
         bottom: 0
         .recommend-content
             height: 100%
@@ -113,16 +114,20 @@ export default {
                 overflow: hidden
             .recommend-list
                 .list-title
-                    height: 65px
-                    line-height: 65px
+                    height: 50px
+                    line-height: 50px
                     text-align: center
+                    background: $color-highlight-background
                     font-size: $font-size-medium
                     color: $color-theme
                 .item
                     display: flex
                     box-sizing: border-box
                     align-items: center
-                    padding: 0 20px 20px 20px
+                    padding: 15px 0 15px 0
+                    margin: 0 20px;
+                    &:last-child:after
+                        border-top: 0
                     .icon
                         flex: 0 0 60px
                         width: 60px
