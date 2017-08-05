@@ -8,7 +8,7 @@
         </router-link>
         <router-link tag="div" class="tab-item" to="/rank">
             <span class="tab-link">排行
-        </span>
+            </span>
         </router-link>
         <router-link tag="div" class="tab-item" to="/search">
             <span class="tab-link">搜索</span>
@@ -17,26 +17,27 @@
 </template>
 
 <script>
-    export default{
+export default {
 
-    }
+}
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import "~common/stylus/variable"
     .v-tab
         display: flex
-        height: 44px
-        line-height: 44px
+        height: 50px
+        line-height: 50px
         font-size: $font-size-medium
+        background: $color-theme
         .tab-item
             flex: 1
             text-align: center
             .tab-link
                 padding-bottom: 5px
-                color: $color-text-l
+                color: $color-text-wl
             &.router-link-active
                 .tab-link
-                    color: $color-theme
-                    border-bottom: 2px solid $color-theme
+                    color: $color-text-w
+                    border-bottom: 2px solid $color-text-w
 </style>

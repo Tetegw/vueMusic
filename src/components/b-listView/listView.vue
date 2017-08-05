@@ -165,7 +165,7 @@ export default {
         overflow: hidden
         background: $color-background
         .list-group
-            padding-bottom: 30px
+            padding-bottom: 20px
             .list-group-title
                 height: 30px
                 line-height: 30px

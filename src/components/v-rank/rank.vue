@@ -73,7 +73,7 @@ export default {
 .v-rank
     position: fixed
     width: 100%
-    top: 88px
+    top: 50px
     bottom: 0
     .toplist
         height: 100%
@@ -98,7 +98,7 @@ export default {
                 height: 100px
                 overflow: hidden
                 background: $color-highlight-background
-                color: $color-text-d
+                color: $color-text-l
                 font-size: $font-size-small
             .song
                 no-wrap()
