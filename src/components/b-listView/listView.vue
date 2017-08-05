@@ -88,6 +88,9 @@ export default {
         selectItem(item) {
             this.$emit('selectItem', item)
         },
+        refresh() {
+            this.$refs.scroll.refresh()
+        },
         _scrollTo(index) {
             if (!index && index !== 0) {
                 return

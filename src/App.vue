@@ -19,6 +19,9 @@ export default {
     'v-header': Vheader,
     'v-tab': Vtab,
     'v-player': Player
+  },
+  created() {
+    document.addEventListener('touchmove', function (e) { e.preventDefault() }, false);
   }
 }
 </script>

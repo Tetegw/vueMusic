@@ -22,8 +22,8 @@
                                 <img alt="" :src="currentSong.image" class="image">
                             </div>
                         </div>
-                        <div class="playimg-lyric-wrapper">
-                            <div class="playing-lyric"></div>
+                        <div class="playing-lyric-wrapper">
+                            <div class="playing-lyric">{{playingLyric}}</div>
                         </div>
                     </div>
                     <!--歌词  -->
@@ -115,6 +115,7 @@ export default {
             currentLyric: '',
             currentLineNum: 0,
             currentShow: 'cd',
+            playingLyric: ''
         }
     },
     computed: {
@@ -151,10 +152,13 @@ export default {
             if (newSong.id === oldSong.id) {
                 return
             }
-            this.$nextTick(() => {
+            if (this.currentLyric) {
+                this.currentLyric.stop()
+            }
+            setTimeout(() => {
                 this.$refs.audio.play()
                 this._getLyric()
-            })
+            }, 1000)
         },
         playing(newPlaying) {
             const audio = this.$refs.audio
@@ -223,36 +227,55 @@ export default {
         },
         togglePlay() {
             this.setPlayingState(!this.playing)
+            if (this.currentLyric) {
+                this.currentLyric.togglePlay()
+            }
         },
         prevSong() {
             if (!this.songReady) {
                 return
             }
-            let index = this.currentIndex - 1
-            if (index < 0) {
-                index = this.playList.length - 1
+            if (this.playList.length === 1) {
+                this._loop()
+                return
+            } else {
+                if (this.mode === playMode.loop) {
+                    this._loop()
+                    return
+                }
+                let index = this.currentIndex - 1
+                if (index === -1) {
+                    index = this.playList.length - 1
+                }
+                this.setCurrentIndex(index)
+                if (!this.playing) {
+                    this.togglePlay()
+                }
             }
-            this.setCurrentIndex(index)
-            if (!this.playing) {
-                this.setPlayingState(true)
-            }
+            this.songReady = false
         },
         nextSong() {
             if (!this.songReady) {
                 return
             }
-            if (this.mode === playMode.loop) {
+            if (this.playList.length === 1) {
                 this._loop()
                 return
+            } else {
+                if (this.mode === playMode.loop) {
+                    this._loop()
+                    return
+                }
+                let index = this.currentIndex + 1
+                if (index === this.playList.length) {
+                    index = 0
+                }
+                this.setCurrentIndex(index)
+                if (!this.playing) {
+                    this.togglePlay()
+                }
             }
-            let index = this.currentIndex + 1
-            if (index > this.playList.length - 1) {
-                index = 0
-            }
-            this.setCurrentIndex(index)
-            if (!this.playing) {
-                this.setPlayingState(true)
-            }
+            this.songReady = false
         },
         audioReady() {
             this.songReady = true
@@ -271,9 +294,13 @@ export default {
             return `${min}:${sec}`
         },
         emitTriggerPercent(percent) {
+            const currentTime = this.currentSong.duration * percent
             this.$refs.audio.currentTime = this.currentSong.duration * percent
             if (!this.playing) {
                 this.togglePlay()
+            }
+            if (this.currentTime) {
+                this.currentLyric.seek(currentTime * 1000)
             }
         },
         changeMode() {
@@ -284,7 +311,7 @@ export default {
                 list = shuffle(this.sequenceList)
             } else {
                 // list = this.sequenceList
-                list = this.playList
+                list = this.sequenceList
             }
             this._resetCurrentIndex(list)
             this.setPlayList(list)
@@ -311,7 +338,7 @@ export default {
             const touch = e.touches[0]
             const deltaX = touch.pageX - this.touch.startX
             const deltaY = touch.pageY - this.touch.startY
-            if (Math.abs(deltaY) > Math.abs(deltaY)) {
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
                 return
             }
             if (!this.touch.moved) {
@@ -369,6 +396,10 @@ export default {
                 if (this.playing) {
                     this.currentLyric.play()
                 }
+            }).catch(() => {
+                this.currentLyric = null
+                this.playingLyric = ''
+                this.currentLineNum = 0
             })
         },
         _handleLyric({ lineNum, txt }) {
@@ -379,10 +410,15 @@ export default {
             } else {
                 this.$refs.lyricList.scrollTo(0, 0, 1000)
             }
+            this.playingLyric = txt
         },
         _loop() {
             this.$refs.audio.currentTime = 0
             this.$refs.audio.play()
+            this.setPlayingState(true)
+            if (this.currentLyric) {
+                this.currentLyric.seek(0)
+            }
         },
         _resetCurrentIndex(list) {
             let index = list.findIndex((item) => {

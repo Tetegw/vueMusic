@@ -24,6 +24,7 @@ export default class song {
                     let Res = res.lyric.replace(/&#58;/g, ':')
                     Res = Res.replace(/&#46;/g, '.')
                     Res = Res.replace(/&#32;/g, ' ')
+                    Res = Res.replace(/&#13;/g, ' ')
                     Res = Res.replace(/&#45;/g, '-')
                     Res = Res.replace(/&#10;/g, '\n')
                     this.lyric = Res

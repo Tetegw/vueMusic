@@ -1,5 +1,5 @@
 <template>
-    <div class="v-recommend">
+    <div class="v-recommend" ref="recommend">
         <v-scroll class="recommend-content" :data="discList" ref="scroll">
             <div>
                 <div v-if="recommends.length" class="slider-wrapper" ref="sliderWrapper">
@@ -32,13 +32,15 @@
 </template>
 
 <script>
-import Scroll from '@/components/b-scroll/scroll';
+import Scroll from '@/components/b-scroll/scroll'
 import Slider from '@/components/b-slider/slider'
 import { getRecommend, getDiscList } from '@/api/recommend'
 import { ERR_OK } from '@/api/config'
-import { mapMutations } from 'vuex';
+import { mapMutations } from 'vuex'
+import { playlistMixin } from '@/common/js/mixin'
 
 export default {
+    mixins: [playlistMixin],
     data() {
         return {
             recommends: [],
@@ -54,6 +56,12 @@ export default {
         this._getDiscList()
     },
     methods: {
+        //覆盖mixin中方法
+        handPlaylist(playlist) {
+            const bottom = playlist.length > 0 ? '60px' : ''
+            this.$refs.recommend.style['bottom'] = bottom
+            this.$refs.scroll.refresh()
+        },
         imgIsLoad() {
             if (!this.checkLoaded) {
                 this.$refs.scroll.refresh()

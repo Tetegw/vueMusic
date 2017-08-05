@@ -1,6 +1,6 @@
 <template>
-    <div class="v-rank">
-        <v-scroll class="toplist" :data="topList">
+    <div class="v-rank" ref="rank">
+        <v-scroll class="toplist" :data="topList" ref="scroll">
             <ul>
                 <li class="item" v-for="item in topList" @click="selectItem(item)" :key="item.id">
                     <div class="icon">
@@ -24,7 +24,10 @@ import { getTopList } from '@/api/rank';
 import { ERR_OK } from '@/api/config'
 import Scroll from '@/components/b-scroll/scroll';
 import { mapMutations } from 'vuex';
+import { playlistMixin } from '@/common/js/mixin';
+
 export default {
+    mixins: [playlistMixin],
     data() {
         return {
             topList: []
@@ -34,6 +37,12 @@ export default {
         this._getTopList()
     },
     methods: {
+        //覆盖mixin中方法
+        handPlaylist(playlist) {
+            const bottom = playlist.length > 0 ? '60px' : ''
+            this.$refs.rank.style['bottom'] = bottom
+            this.$refs.scroll.refresh()
+        },
         selectItem(item) {
             this.setTopList(item)
             this.$router.push({
