@@ -28,10 +28,12 @@
 import Scroll from '@/components/b-scroll/scroll';
 import SongList from '@/components/b-song-list/song-list';
 import { mapActions } from 'vuex';
+import { playlistMixin } from '@/common/js/mixin';
 
 const RESERVED_HEIGHT = 40
 
 export default {
+    mixins: [playlistMixin],
     data() {
         return {
             imageHeight: 0,
@@ -63,6 +65,12 @@ export default {
         }
     },
     methods: {
+        //覆盖mixin中方法
+        handPlaylist(playlist) {
+            const bottom = playlist.length > 0 ? '60px' : ''
+            this.$refs.list.$el.style['bottom'] = bottom
+            this.$refs.list.refresh()
+        },
         back() {
             this.$router.back()
         },

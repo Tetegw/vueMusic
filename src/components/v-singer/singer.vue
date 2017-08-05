@@ -1,6 +1,6 @@
 <template>
-    <div class="v-singer">
-        <v-listView :data="singers" @selectItem="selectItem"></v-listView>
+    <div class="v-singer" ref="singerEl">
+        <v-listView :data="singers" @selectItem="selectItem" ref="singerElChild"></v-listView>
         <router-view></router-view>
     </div>
 </template>
@@ -11,11 +11,13 @@ import { getSinger } from '@/api/singer'
 import { ERR_OK } from '@/api/config'
 import Singer from '@/common/js/singer_class'
 import { mapMutations } from 'vuex';
+import { playlistMixin } from '@/common/js/mixin';
 
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 
 export default {
+    mixins: [playlistMixin],
     data() {
         return {
             singers: []
@@ -25,6 +27,12 @@ export default {
         this._getSinger();
     },
     methods: {
+        //覆盖mixin中方法
+        handPlaylist(playlist) {
+            const bottom = playlist.length > 0 ? '60px' : ''
+            this.$refs.singerEl.style['bottom'] = bottom
+            this.$refs.singerElChild.refresh()
+        },
         normalizeSinger(list) {
             let map = {
                 hot: {
