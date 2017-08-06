@@ -15,8 +15,8 @@
                 </div>
             </div>
         </div>
-        <div class="search-result" v-show="query">
-            <v-suggest :query="query"></v-suggest>
+        <div class="search-result" v-show="query" ref="searchResult">
+            <v-suggest :query="query" ref="suggest" @emitListScroll="emitListScroll"></v-suggest>
         </div>
         <router-view></router-view>
     </div>
@@ -27,8 +27,10 @@ import SearchBox from '@/components/b-search-box/search-box'
 import Suggest from '@/components/v-suggest/suggest'
 import { getHotKey } from '@/api/search'
 import { ERR_OK } from '@/api/config'
+import { playlistMixin } from '@/common/js/mixin'
 
 export default {
+    mixins: [playlistMixin],
     data() {
         return {
             hotKey: [],
@@ -39,11 +41,20 @@ export default {
         this._getHotKey()
     },
     methods: {
+        //覆盖mixin中方法
+        handPlaylist(playlist) {
+            const bottom = playlist.length > 0 ? '60px' : ''
+            this.$refs.searchResult.style['bottom'] = bottom
+            this.$refs.suggest.refresh()
+        },
         addQuery(query) {
             this.$refs.searchBox.setQuery(query)
         },
         onQueryChange(newQuery) {
             this.query = newQuery
+        },
+        emitListScroll() {
+            this.$refs.searchBox.inputBlur()
         },
         _getHotKey() {
             getHotKey().then((res) => {

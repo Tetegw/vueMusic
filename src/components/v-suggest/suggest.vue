@@ -1,5 +1,5 @@
 <template>
-    <v-scroll class="v-suggest" :data="result" :pullup="pullup" @emitScrollToEnd="emitScrollToEnd" ref="vScroll">
+    <v-scroll class="v-suggest" :data="result" :pullup="pullup" :beforeScroll="beforeScroll" @emitScrollToEnd="emitScrollToEnd" ref="vScroll" @emitBeforeScroll="emitBeforeScroll">
         <ul class="suggest-list">
             <li class="suggest-item" v-for="(item, index) in result" :key="index" @click="selectItem(item)">
                 <div class="icon">
@@ -11,6 +11,9 @@
             </li>
             <v-loading v-show="hasMore" title=""></v-loading>
         </ul>
+        <div class="no-result-wrapper" v-show="!hasMore && !result.length">
+            <v-no-result title="抱歉，暂无搜索结果"></v-no-result>
+        </div>
     </v-scroll>
 </template>
 
@@ -21,7 +24,8 @@ import { createSong } from '@/common/js/song_class'
 import Scroll from '@/components/b-scroll/scroll'
 import Loading from '@/components/b-loading/loading'
 import Singer from '@/common/js/singer_class'
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
+import NoResult from '@/components/b-no-result/no-result';
 
 const TYPE_SINGER = 'singer'
 const PERPAGE = 20
@@ -41,7 +45,8 @@ export default {
             page: 1,
             pullup: true,
             result: [],
-            hasMore: true
+            hasMore: true,
+            beforeScroll: true
         }
     },
     watch: {
@@ -71,6 +76,9 @@ export default {
                 }
             })
         },
+        emitBeforeScroll() {
+            this.$emit('emitListScroll')
+        },
         selectItem(item) {
             if (item.type === TYPE_SINGER) {
                 const singer = new Singer({
@@ -81,7 +89,12 @@ export default {
                     path: `/search/${singer.id}`
                 })
                 this.SET_SINGER(singer)
+            } else {
+                this.insertSong(item)
             }
+        },
+        refresh() {
+            this.$refs.vScroll.refresh()
         },
         _search() {
             this.hasMore = true
@@ -124,10 +137,14 @@ export default {
         ...mapMutations({
             SET_SINGER: 'SET_SINGER'
         }),
+        ...mapActions([
+            'insertSong'
+        ])
     },
     components: {
         'v-scroll': Scroll,
-        'v-loading': Loading
+        'v-loading': Loading,
+        'v-no-result': NoResult
     }
 }
 </script>
@@ -150,11 +167,11 @@ export default {
             width: 30px
             [class^="icon-"]
                 font-size: 14px
-                color: $color-text-d
+                color: $color-text-l
         .name
             flex: 1
             font-size: $font-size-medium
-            color: $color-text-d
+            color: $color-text-l
             overflow: hidden
             .text
                 no-wrap()
