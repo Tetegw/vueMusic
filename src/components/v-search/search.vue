@@ -18,6 +18,7 @@
         <div class="search-result" v-show="query">
             <v-suggest :query="query"></v-suggest>
         </div>
+        <router-view></router-view>
     </div>
 </template>
 

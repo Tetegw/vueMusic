@@ -1,7 +1,7 @@
 <template>
     <v-scroll class="v-suggest" :data="result" :pullup="pullup" @emitScrollToEnd="emitScrollToEnd" ref="vScroll">
         <ul class="suggest-list">
-            <li class="suggest-item" v-for="(item, index) in result" :key="index">
+            <li class="suggest-item" v-for="(item, index) in result" :key="index" @click="selectItem(item)">
                 <div class="icon">
                     <i :class="getIconCls(item)"></i>
                 </div>
@@ -17,9 +17,11 @@
 <script>
 import { search } from '@/api/search'
 import { ERR_OK } from '@/api/config'
-import { createSong } from '@/common/js/song_class';
-import Scroll from '@/components/b-scroll/scroll';
-import Loading from '@/components/b-loading/loading';
+import { createSong } from '@/common/js/song_class'
+import Scroll from '@/components/b-scroll/scroll'
+import Loading from '@/components/b-loading/loading'
+import Singer from '@/common/js/singer_class'
+import { mapMutations } from 'vuex'
 
 const TYPE_SINGER = 'singer'
 const PERPAGE = 20
@@ -69,10 +71,24 @@ export default {
                 }
             })
         },
+        selectItem(item) {
+            if (item.type === TYPE_SINGER) {
+                const singer = new Singer({
+                    id: item.singermid,
+                    name: item.singername
+                })
+                this.$router.push({
+                    path: `/search/${singer.id}`
+                })
+                this.SET_SINGER(singer)
+            }
+        },
         _search() {
             this.hasMore = true
             this.page = 1
-            this.$refs.vScroll.scrollTo(0, 0)
+            if (this.query) {
+                this.$refs.vScroll.scrollTo(0, 0)
+            }
             search(this.query, this.page, this.showSinger, PERPAGE).then((res) => {
                 if (res.code === ERR_OK) {
                     this.result = this._genResult(res.data)
@@ -104,7 +120,10 @@ export default {
                 }
             }, this);
             return ret
-        }
+        },
+        ...mapMutations({
+            SET_SINGER: 'SET_SINGER'
+        }),
     },
     components: {
         'v-scroll': Scroll,
