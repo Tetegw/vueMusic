@@ -1,5 +1,8 @@
 # vue-music
 
+ 由于使用jsonp调用QQ音乐第三方接口，第三方接口的更改会导致项目出错。
+
+
 | ![20171228212514](https://github.com/Tetegw/vueMusic/blob/master/static/proImage/20171228212514.png) | ![20171228212508](https://github.com/Tetegw/vueMusic/blob/master/static/proImage/20171228212508.png) |
 | ---------------------------------------- | ---------------------------------------- |
 | ![20171228213500](https://github.com/Tetegw/vueMusic/blob/master/static/proImage/20171228213500.png) | ![20171228212448](https://github.com/Tetegw/vueMusic/blob/master/static/proImage/20171228212448.png) |
